@@ -1,5 +1,5 @@
 package com.Flux.game;
-
+ 
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +11,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 import com.Flux.game.graphics.Screen;
+import com.Flux.game.input.Keyboard;
 
 public class Game extends Canvas implements Runnable {
 	private static final long serialVersionUID = 11;
@@ -22,6 +23,7 @@ public class Game extends Canvas implements Runnable {
 
 	private Thread thread;
 	private JFrame Frame;
+	private Keyboard key;
 	private boolean running = false;
 	
 	private Screen screen;
@@ -35,6 +37,9 @@ public class Game extends Canvas implements Runnable {
 		
 		screen = new Screen(width, height);
 		Frame = new JFrame();
+		key = new Keyboard();
+		
+		addKeyListener(key);
 	}
 	
 	public synchronized void start() {
@@ -82,7 +87,15 @@ public class Game extends Canvas implements Runnable {
 		stop();
 	}
 	
-	public void update(){		
+	int x = 0, y = 0;
+	public void update(){	
+		key.update();
+		if (key.up)y--;
+		if (key.down)y++;
+		if (key.left)x--;
+		if (key.right)x++;
+
+		
 	}
 	
 	public void render(){
@@ -93,7 +106,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		screen.clear();
-		screen.render();
+		screen.render(x, y);
 		
 		for (int i = 0; i < pixels.length; i++) {
 		pixels[i] =	screen.pixels[i];
