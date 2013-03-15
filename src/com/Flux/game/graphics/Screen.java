@@ -6,8 +6,8 @@ public class Screen {
 
 	private int width, height;
 	public int[] pixels;
-	public final int MAP_Size_Width = 1280;
-	public final int MapSize_Length = 720;
+	public final int MAP_Size_Width = 16;
+	public final int MapSize_Length = 16;
 	public final int MapSize_Mask = MAP_Size_Width - 1;
 	
 	public int[] tiles = new int[MAP_Size_Width * MapSize_Length];
@@ -32,13 +32,12 @@ public class Screen {
 	
 	public void render(int xOffset, int yOffset){
 		for (int y = 0; y < height; y++){
-			int yy = y;
-			//if(yy < 0 || yy >= height) break;
+			int yp = y + yOffset;
+			if (yp < 0 || yp >= height) continue;
 			for (int x = 0; x < width; x++){
-				int xx = x + xOffset;
-				//if(xx < 0 || xx >= width) break;
-				int tileIndex = ((xx >> 2) & MapSize_Mask) + ((yy >> 2) & MapSize_Mask) * MAP_Size_Width;
-				pixels[x + y * width] = tiles[tileIndex];
+				int xp = x + xOffset;
+				if (xp < 0 || xp >= width) continue;
+				pixels[xp + yp * width] = Sprite.grass.pixels[(x&15) + (y&15) * Sprite.grass.SIZE];
 			}
 		}
 	}
